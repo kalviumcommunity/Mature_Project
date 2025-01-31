@@ -1,0 +1,19 @@
+{
+  "name": "squad85_incident_project",
+  "version": "1.0.0",
+  "description": "Project Title: Incidents",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kalviumcommunity/Mature_Project.git"
+  },
+  "author": "Pranav sharma",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kalviumcommunity/Mature_Project/issues"
+  },
+  "homepage": "https://github.com/kalviumcommunity/Mature_Project#readme"
+}
