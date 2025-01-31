@@ -1,5 +1,5 @@
 {
-  "name": "asap",
+  "name": "squad85_incident_project",
   "version": "1.0.0",
   "description": "Project Title: Incidents",
   "main": "index.js",
@@ -10,16 +10,10 @@
     "type": "git",
     "url": "git+https://github.com/kalviumcommunity/Mature_Project.git"
   },
-  "keywords": [],
-  "author": "",
+  "author": "Pranav sharma",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/kalviumcommunity/Mature_Project/issues"
   },
-  "homepage": "https://github.com/kalviumcommunity/Mature_Project#readme",
-  "dependencies": {
-    "axios": "^1.7.9",
-    "express": "^4.21.2",
-    "react": "^19.0.0"
-  }
+  "homepage": "https://github.com/kalviumcommunity/Mature_Project#readme"
 }
