@@ -48,3 +48,12 @@ APIs:
 RESTful API for user authentication, incident management, voting, commenting, and leaderboard.
 
 Testing: Postman or Bruno.
+
+
+Render
+
+Build -npm install
+
+Start-node server.js
+
+link -https://mature-project-6.onrender.com/ping
