@@ -4,6 +4,7 @@ const PORT=3000;
 const connectDatabase=require('./Database/db.js');
 const User = require('./model/Users');
 const inci = require('./model/incident');
+const { default: mongoose } = require('mongoose');
 
 
 if (process.env.NODE_ENV !== "PRODUCTION") {
@@ -18,6 +19,18 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/ping',(req,res)=>{
     res.send("Hi i am An Asura");
 })
+app.get("/home", (req, res) => {
+    let status;
+    if (mongoose.connection.readyState === 1) {
+      status = "Database";
+      res.send(`Our Incident Website is connected to ${status} `);
+    }
+    else if(mongoose.connection.readyState === 0){
+        status="Database";
+        res.send(`Our Incident Website is not connected to ${status} `);
+    }
+    
+  });
 
 
 
