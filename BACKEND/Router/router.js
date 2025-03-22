@@ -1,23 +1,66 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../model/Users");
+const bcrypt=require("bcrypt");
+const jwt =require('jsonwebtoken');
+const SECRET_KEY="your_secret_key"
 
 router.post('/user', async (req, res) => {
+    const { Name,  email,phoneNumber,password } = req.body;
     try {
-        const { Username, PhoneNo, email, createdAt } = req.body;
-
-        if (!Username || !PhoneNo || !email) {
+        if (!Name || !phoneNumber|| !email || !password ) {
             return res.status(400).json({ message: "Missing required fields" });
         }
+        const saltRounds=10;
+        const haash=await bcrypt.hash(password,saltRounds)
 
-        const create = await User.create({ Username, PhoneNo, email, createdAt });
+        const create = await User.create({ Name, phoneNumber, email,password:haash });
         res.json(create);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
+
+
 });
 
-router.get('/user', async (req, res) => {
+router.post('/user/login',async(req,res)=>{
+    const {email,password}=req.body;
+    try{
+        let user=await User.findOne({email});
+        if(!user){
+            return res.status(400).json({error:"user not found"})
+        }
+        const isMatch=await bcrypt.compare(password,user.password);
+        if (!isMatch) {
+            return res.status(401).json({ error: "Incorrect password" });
+        }
+
+        const token=jwt.sign({email:user.email,id: user._id },SECRET_KEY)
+        res.json({ message: "Login successful", token });
+    }
+    catch (err) {
+        console.error("Login error:", err);
+        res.status(500).send("Internal server error");
+    }
+
+})
+
+const verifyToken = (req, res, next) => {
+    const token = req.headers["authorization"];
+    if (!token) {
+        return res.status(401).json({ error: "Access denied, no token provided" });
+    }
+
+    try {
+        const decoded = jwt.verify(token.split(" ")[1], SECRET_KEY);
+        req.user = decoded;
+        next();
+    } catch (error) {
+        res.status(403).json({ error: "Invalid token" });
+    }
+};
+
+router.get('/user',verifyToken, async (req, res) => {
     try {
         const users = await User.find();
         res.json(users);
@@ -28,7 +71,7 @@ router.get('/user', async (req, res) => {
 
 
 
-router.delete('/user/:id', async (req, res) => {  // Fixed URL
+router.delete('/user/:id', async (req, res) => {  
     try {
         const deletedUser = await User.findByIdAndDelete(req.params.id);
         if (!deletedUser) {
@@ -39,5 +82,5 @@ router.delete('/user/:id', async (req, res) => {  // Fixed URL
         res.status(500).json({ message: err.message });
     }
 });
-// code bhulgaya toh screen band karde
+
 module.exports = router;
