@@ -1,7 +1,5 @@
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import "./Css/Homepage.css";
-import "./Css/Signup.css";
 
 function Signup() {
   const {
@@ -32,7 +30,7 @@ function Signup() {
 
       if (response.ok) {
         alert("Signup Successful!");
-        navigate("/Login"); // Redirect after signup
+        navigate("/Login");
       } else {
         alert(`Error: ${result.message}`);
       }
@@ -43,53 +41,64 @@ function Signup() {
   };
 
   return (
-    <div className="container">
-      <nav className="navbar">
-        <div className="logo">Incidents</div>
-        <div className="nav-links">
-          <button className="nav-button">Home</button>
-          <button className="nav-button">About</button>
-          <button className="nav-button">Contact</button>
+    <div className="w-full min-h-screen flex flex-col">
+      {/* Navbar */}
+      <nav className="w-full flex justify-between items-center py-4 px-8 bg-white shadow-md">
+        <div className="text-2xl font-bold">Incidents</div>
+        <div className="space-x-4">
+          <button className="text-gray-600 hover:text-black">Home</button>
+          <button className="text-gray-600 hover:text-black">About</button>
+          <button className="text-gray-600 hover:text-black">Contact</button>
         </div>
       </nav>
 
-      <div className="form-container">
-        <div className="signup-box">
-          <h2>Sign Up</h2>
-          <p>Sign up to Share your Crazy Incidents.</p>
-          <form onSubmit={handleSubmit(onSubmit)}>
+      {/* Form Container */}
+      <div className="flex justify-center items-center min-h-screen bg-gray-100">
+        <div className="w-96 bg-white shadow-lg rounded-lg p-6 text-center">
+          <h2 className="text-2xl font-bold mb-2">Sign Up</h2>
+          <p className="text-gray-600 mb-4">Sign up to share your crazy incidents.</p>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
             <input
               type="text"
               placeholder="Name"
               {...register("Name", { required: "Name is required" })}
+              className="w-full px-3 py-2 border rounded-md"
             />
-            {errors.Name && <p className="error">{errors.Name.message}</p>}
+            {errors.Name && <p className="text-red-500 text-sm">{errors.Name.message}</p>}
 
             <input
               type="email"
               placeholder="Email"
               {...register("email", { required: "Email is required" })}
+              className="w-full px-3 py-2 border rounded-md"
             />
-            {errors.email && <p className="error">{errors.email.message}</p>}
+            {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
 
             <input
               type="number"
               placeholder="Mobile Number"
               {...register("phoneNumber", { required: "Number is required" })}
+              className="w-full px-3 py-2 border rounded-md"
             />
-            {errors.phoneNumber && <p className="error">{errors.phoneNumber.message}</p>}
+            {errors.phoneNumber && <p className="text-red-500 text-sm">{errors.phoneNumber.message}</p>}
 
             <input
               type="password"
               placeholder="Password"
               {...register("password", { required: "Password is required" })}
+              className="w-full px-3 py-2 border rounded-md"
             />
-            {errors.password && <p className="error">{errors.password.message}</p>}
+            {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
 
-            <button type="submit" className="hero-buttonn">Sign-up</button>
+            <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
+              Sign Up
+            </button>
           </form>
 
-          <p>Already have an account? <Link to="/Login">Login</Link></p>
+          <p className="mt-3 text-gray-600">
+            Already have an account? <Link to="/Login" className="text-blue-500">Login</Link>
+          </p>
         </div>
       </div>
     </div>

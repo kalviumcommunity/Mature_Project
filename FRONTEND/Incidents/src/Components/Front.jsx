@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import incidentLogo from "../assets/lo.webp";
 import search from "../assets/search_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png";
@@ -12,16 +12,9 @@ import arrow from "../assets/chevron_right_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz2
 import ar from "../assets/keyboard_arrow_up_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png";
 import Box from "./Box";
 
-const Dashboard = () => {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [items, setItems] = useState([]);
 
-  useEffect(() => {
-    fetch("http://localhost:8000/api1/inci")
-      .then((response) => response.json())
-      .then((data) => setItems(data))
-      .catch((error) => console.error("Error fetching data:", error));
-  }, []);
+const Front = (props) => {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
     <>
@@ -39,8 +32,8 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="flex">
-          <Link to="/post">
-            <img src={create} alt="Create" className="h-8 w-8 mr-10" />
+        <Link to="/post">
+          <img src={create} alt="Create" className="h-8 w-8 mr-10" />
           </Link>
           <img src={notification} alt="Notifications" className="h-8 w-8 mr-10" />
           <img src={account} alt="Account" className="h-8 w-8 mr-10" />
@@ -69,7 +62,7 @@ const Dashboard = () => {
           <div className="border-t border-gray-600 mt-7"></div>
 
           {/* Dropdown for Rooms */}
-          <div
+          <div 
             className="mt-9 pl-4 relative hover:border rounded-lg shadow-lg flex items-center cursor-pointer"
             onClick={() => setDropdownOpen(!dropdownOpen)}
           >
@@ -92,16 +85,15 @@ const Dashboard = () => {
             </Link>
           </div>
         </aside>
+         <div className={`w-full ${props.className}`}>
+    <h1>{props.Name}</h1>
+    {props.children}
+  </div>
 
-        {/* Incident Boxes */}
-        <div className="flex-1 flex flex-col items-center justify-start min-h-screen overflow-auto gap-6 p-4 pt-24">
-          {items.map((item) => (
-            <Box description={item.description} />
-          ))}
-        </div>
+        
       </main>
     </>
   );
 };
 
-export default Dashboard;
+export default Front;
