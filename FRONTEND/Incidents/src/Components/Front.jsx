@@ -36,7 +36,9 @@ const Front = (props) => {
           <img src={create} alt="Create" className="h-8 w-8 mr-10" />
           </Link>
           <img src={notification} alt="Notifications" className="h-8 w-8 mr-10" />
-          <img src={account} alt="Account" className="h-8 w-8 mr-10" />
+          <Link to="/profile">
+                    <img src={account} alt="Account" className="h-8 w-8 mr-10" />
+          </Link>
         </div>
       </nav>
 
