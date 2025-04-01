@@ -35,7 +35,7 @@ router.post('/user/login',async(req,res)=>{
             return res.status(401).json({ error: "Incorrect password" });
         }
 
-        const token=jwt.sign({email:user.email,id: user._id },SECRET_KEY)
+        const token=jwt.sign({id: user._id,email:user.email, },SECRET_KEY)
         res.json({ message: "Login successful", token });
     }
     catch (err) {
@@ -62,8 +62,9 @@ const verifyToken = (req, res, next) => {
 
 router.get('/user',verifyToken, async (req, res) => {
     try {
-        const users = await User.find();
-        res.json(users);
+        const userId = req.user.id
+        const user = await User.findById(userId);
+        res.json(user);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }

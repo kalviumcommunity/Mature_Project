@@ -41,14 +41,17 @@ function Post() {
 
   return (
     <Front>
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-[#0F172A] to-black">
-      <div className="bg-[#0F172A] text-white p-6 rounded-lg shadow-md w-96">
-        <h2 className="text-lg font-bold mb-4">Create a Post</h2>
+   
+      
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-[#0F172A] to-black"> 
+    
+    <div className="bg-[#0F172A] text-white p-6 rounded-lg shadow-md w-180 h-110 flex items-center justify-center">
+        <h2 className="text-lg font-bold mb-90  ">Create Post</h2>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
           <textarea
             placeholder="Write your description here..."
             {...register("description", )}
-            className="w-full h-40 p-4 border rounded-md bg-gray-800 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-90 h-55 p-4 border rounded-md bg-gray-800 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           {errors.description && <span className="text-red-500">{errors.description.message}</span>}
           <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md">

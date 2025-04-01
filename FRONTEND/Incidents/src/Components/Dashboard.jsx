@@ -11,21 +11,35 @@ import explore from "../assets/explore_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.pn
 import arrow from "../assets/chevron_right_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png";
 import ar from "../assets/keyboard_arrow_up_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png";
 import Box from "./Box";
+import { useNavigate } from "react-router-dom";
 
-const Dashboard = () => {
+
+
+
+const Dashboard = () => {  
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [items, setItems] = useState([]);
-
+    const navigate = useNavigate();
+   
+    const handleDelete = (id) => {
+      setItems((prevItems) => prevItems.filter((item) => item.id !== id));
+    };
+  
+ 
   useEffect(() => {
     fetch("http://localhost:8000/api1/inci")
       .then((response) => response.json())
       .then((data) => setItems(data))
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
+  
+  const handleUpdate = (id) => {
+    navigate(`/update/${id}`);
+  };
 
   return (
     <>
-      {/* Navbar */}
+
       <nav className="bg-gradient-to-b from-gray-800 to-black flex items-center justify-between p-4">
         <img src={incidentLogo} alt="Incident Logo" className="h-16 w-16" />
         <div className="absolute left-1/2 transform -translate-x-1/2">
@@ -43,13 +57,13 @@ const Dashboard = () => {
             <img src={create} alt="Create" className="h-8 w-8 mr-10" />
           </Link>
           <img src={notification} alt="Notifications" className="h-8 w-8 mr-10" />
-          <img src={account} alt="Account" className="h-8 w-8 mr-10" />
+          <Link to="/profile">
+            <img src={account} alt="Account" className="h-8 w-8 mr-10" />
+          </Link>
         </div>
       </nav>
 
-      {/* Main Section */}
       <main className="bg-gradient-to-b from-gray-800 to-black h-screen flex">
-        {/* Sidebar */}
         <aside className="bg-gray-900 text-white w-64 h-screen p-4 flex flex-col">
           <nav className="flex flex-col space-y-4">
             <Link to="/dashboard" className="flex items-center space-x-2 p-2 hover:bg-gray-700 rounded">
@@ -68,7 +82,6 @@ const Dashboard = () => {
 
           <div className="border-t border-gray-600 mt-7"></div>
 
-          {/* Dropdown for Rooms */}
           <div
             className="mt-9 pl-4 relative hover:border rounded-lg shadow-lg flex items-center cursor-pointer"
             onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -93,12 +106,21 @@ const Dashboard = () => {
           </div>
         </aside>
 
-        {/* Incident Boxes */}
+     
         <div className="flex-1 flex flex-col items-center justify-start min-h-screen overflow-auto gap-6 p-4 pt-24">
-          {items.map((item) => (
-            <Box description={item.description} />
-          ))}
+          <div>
+          {items.map((item, index) => {
+  console.log("Item ID:", item._id); 
+  return <Box key={index} description={item.description} id={item._id}  onDelete={handleDelete} onupdate={handleUpdate}/>;
+
+  
+}
+
+
+)}      
+          </div>
         </div>
+
       </main>
     </>
   );
