@@ -1,108 +1,141 @@
-import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import axios from 'axios';
 
-function Signup() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-
+const Signup = () => {
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
+    phoneNumber: ''
+  });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const onSubmit = async (data) => {
-    console.log("Form Data:", data);
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8000/api/user", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          Name: data.Name,      
-          phoneNumber: data.phoneNumber,
-          email: data.email,
-          password: data.password,
-        }),
+      const response = await axios.post('http://localhost:8000/api/user/signup', {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+        phoneNumber: formData.phoneNumber
       });
 
-      const result = await response.json();
-      console.log("Server Response:", result);
-
-      if (response.ok) {
-        alert("Signup Successful!");
-        navigate("/Login");
-      } else {
-        alert(`Error: ${result.message}`);
-      }
-    } catch (error) {
-      console.error("Signup Error:", error);
-      alert("Failed to sign up. Try again.");
+      const { token, user } = response.data;
+      
+      // Store token and user data
+      login(token, user);
+      
+      // Redirect to home page
+      navigate('/');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to create account');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col">
-      {/* Navbar */}
-      <nav className="w-full flex justify-between items-center py-4 px-8 bg-white shadow-md">
-        <div className="text-2xl font-bold">Incidents</div>
-        <div className="space-x-4">
-          <button className="text-gray-600 hover:text-black">Home</button>
-          <button className="text-gray-600 hover:text-black">About</button>
-          <button className="text-gray-600 hover:text-black">Contact</button>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        <div>
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            Create your account
+          </h2>
         </div>
-      </nav>
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+              <span className="block sm:inline">{error}</span>
+            </div>
+          )}
+          <div className="rounded-md shadow-sm -space-y-px">
+            <div>
+              <label htmlFor="username" className="sr-only">Username</label>
+              <input
+                id="username"
+                name="username"
+                type="text"
+                required
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                placeholder="Username"
+                value={formData.username}
+                onChange={handleChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="email" className="sr-only">Email address</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                placeholder="Email address"
+                value={formData.email}
+                onChange={handleChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="phoneNumber" className="sr-only">Phone Number</label>
+              <input
+                id="phoneNumber"
+                name="phoneNumber"
+                type="tel"
+                required
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                placeholder="Phone Number"
+                value={formData.phoneNumber}
+                onChange={handleChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="password" className="sr-only">Password</label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                required
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                placeholder="Password"
+                value={formData.password}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
 
-      {/* Form Container */}
-      <div className="flex justify-center items-center min-h-screen bg-gray-100">
-        <div className="w-96 bg-white shadow-lg rounded-lg p-6 text-center">
-          <h2 className="text-2xl font-bold mb-2">Sign Up</h2>
-          <p className="text-gray-600 mb-4">Sign up to share your crazy incidents.</p>
-
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-            <input
-              type="text"
-              placeholder="Name"
-              {...register("Name", { required: "Name is required" })}
-              className="w-full px-3 py-2 border rounded-md"
-            />
-            {errors.Name && <p className="text-red-500 text-sm">{errors.Name.message}</p>}
-
-            <input
-              type="email"
-              placeholder="Email"
-              {...register("email", { required: "Email is required" })}
-              className="w-full px-3 py-2 border rounded-md"
-            />
-            {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
-
-            <input
-              type="number"
-              placeholder="Mobile Number"
-              {...register("phoneNumber", { required: "Number is required" })}
-              className="w-full px-3 py-2 border rounded-md"
-            />
-            {errors.phoneNumber && <p className="text-red-500 text-sm">{errors.phoneNumber.message}</p>}
-
-            <input
-              type="password"
-              placeholder="Password"
-              {...register("password", { required: "Password is required" })}
-              className="w-full px-3 py-2 border rounded-md"
-            />
-            {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
-
-            <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
-              Sign Up
+          <div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              {loading ? 'Creating account...' : 'Sign up'}
             </button>
-          </form>
-
-          <p className="mt-3 text-gray-600">
-            Already have an account? <Link to="/Login" className="text-blue-500">Login</Link>
-          </p>
+          </div>
+        </form>
+        <div className="text-center">
+          <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+            Already have an account? Sign in
+          </Link>
         </div>
       </div>
     </div>
   );
-}
+};
 
-export default Signup;
+export default Signup; 
