@@ -4,9 +4,14 @@ const PORT = 8000;
 const connectDatabas = require('./Database/db.js');
 const userRoutes = require('./Router/router.js');
 const InciRoutes = require('./Router/inci_Router.js');
+const Community = require('./Router/community.js');
+const cookieParser = require('cookie-parser');
  
 const cors = require("cors");
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(cors({ 
+  origin: "http://localhost:5173",
+  credentials: true
+}));
 
 
 if (process.env.NODE_ENV !== "PRODUCTION") {
@@ -16,8 +21,10 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
 connectDatabas();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); 
+app.use(cookieParser());
 app.use('/api', userRoutes);
-app.use('/api1',InciRoutes)
+app.use('/api1',InciRoutes);
+app.use('/api2',Community)
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

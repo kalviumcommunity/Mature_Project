@@ -1,6 +1,6 @@
 const mongoose=require('mongoose');
 const UserSchema=mongoose.Schema({
-    Name:{
+    username:{
         type:String,
         required: [true, "Please enter your name!"],
     },

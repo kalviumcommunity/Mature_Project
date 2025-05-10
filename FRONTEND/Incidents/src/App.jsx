@@ -1,26 +1,30 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import HomePage from "./Components/HomePage";
-import Signup from "./Components/Signup";
-import Login from "./Components/Login";
-import Profile from "./Components/Profile";
 import "./App.css";
-import Dashboard from "./Components/Dashboard";
-import Post from "./Components/Post";
-import UpdateBox from "./Components/UpdateBox";
+import Incidents_Homepage from "./Components/Incidents_Homepage";
+import Incidence_create from "./Components/Incidence_create";
+import Incidet_community from "./Components/Incidet_community";
+import Login from "./Components/Login";
+import Signup from "./Components/Signup";
+import ProtectedRoute from "./Components/ProtectedRoute";
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   return (
+    <AuthProvider>
    
-      <Routes>
-        <Route path="/Sign-up" element={<Signup />} />
-        <Route path="/" element={<HomePage />} />
-        <Route path="/Login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/post" element={<Post />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/updateForm/:id" element={<UpdateBox />} />
-      </Routes>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          
+          {/* Protected Routes */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<Incidents_Homepage />} />
+            <Route path="/create" element={<Incidence_create />} />
+            <Route path="/community" element={<Incidet_community />} />
+          </Route>
+        </Routes>
     
+    </AuthProvider>
   );
 }
 
